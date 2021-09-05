@@ -9,7 +9,9 @@ const Posts = require("../models/Posts");
 const httpMocks = require("node-mocks-http");
 const newPost = require("../mocks/posts.mock.json");
 const allPosts = require("../mocks/all-todos.mock.json");
+const { findByIdAndUpdate } = require("../models/Posts");
 let req, res;
+const postId = "6134685d7f2c70efa89addea"
 
 beforeEach(() => {
   req = httpMocks.createRequest();
@@ -19,6 +21,7 @@ beforeEach(() => {
 Posts.create = jest.fn();
 Posts.find = jest.fn();
 Posts.findById = jest.fn();
+Posts.findByIdAndUpdate = jest.fn();
 
 describe("postsController createPost", () => {
   beforeEach(() => {
@@ -78,9 +81,9 @@ describe("postsController getPost", () => {
   });
 
   it("should call Posts.findById", async () => {
-    req.params.id = "5d5ecb5a6e598605f06cb945";
+    req.params.id = postId;
     await getPost(req, res);
-    expect(Posts.findById).toBeCalledWith({"_id": "5d5ecb5a6e598605f06cb945"});
+    expect(Posts.findById).toBeCalledWith({"_id": postId});
   });
 
   it("should return response with status 200 ", async () => {
@@ -90,13 +93,37 @@ describe("postsController getPost", () => {
     expect(res._getJSONData()).toStrictEqual(newPost);
     expect(res._isEndCalled()).toBeTruthy();
   });
+
+  it("should return 404 when item doesn't exists", async () => {
+    Posts.findById.mockReturnValue(null);
+    await getPost(req, res);
+    expect(res.statusCode).toBe(404);
+    expect(res._isEndCalled()).toBeTruthy();
+  })
 });
 
-// describe("postsController putPost", () => {
-//   it("should have a putPost method", () => {
-//     expect(typeof putPost).toBe("function");
-//   });
-// });
+describe("postsController putPost", () => {
+  it("should have a putPost method", () => {
+    expect(typeof putPost).toBe("function");
+  });
+
+  it("should update to findByIdAndUpdate", async () => {
+    req.params.id = postId;
+    req.body = newPost;
+    await putPost(req, res);
+    expect(Posts.findByIdAndUpdate).toHaveBeenCalledWith({"_id": postId}, {"$set": newPost});
+  });
+
+  it("should return http code 200 and json data", async () => {
+    req.params.id = postId;
+    req.body = newPost;
+    Posts.findByIdAndUpdate.mockReturnValue(newPost);
+    await putPost(req, res);
+    expect(res._isEndCalled).toBeTruthy();
+    expect(res.statusCode).toBe(200);
+    expect(res._getJSONData()).toStrictEqual(newPost);
+  });
+});
 
 // describe("postsController delPost", () => {
 //     it("should have a delPost method", () => {

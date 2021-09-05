@@ -24,7 +24,7 @@ app.get('/posts', async (_req, res) => {
 });
 
 // En este caso la escritura de un nuevo post no funcionaria por que por que no se esta instanciando el modelo Post.
-// Ademas para crear un nuevo post en este caso se usaria el save(). 
+// Despues faltaria agregar el await antes del Post.create(). 
 app.post('/posts/create', async (req, res) => {
   const {
     title,

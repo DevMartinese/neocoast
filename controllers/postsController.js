@@ -15,9 +15,19 @@ exports.getPosts = async (req, res) => {
 };
 
 exports.getPost = async (req, res) => {
-  const { id: _id } = req.params;
-  const post = await Posts.findById({ _id });
-  res.status(200).json(post);
+  try {
+    const { id: _id } = req.params;
+    const post = await Posts.findById({ _id });
+
+    if (post) {
+      res.status(200).json(post);
+    } else {
+      res.status(404).send();
+    }
+
+  } catch (error) {
+    res.status(404).json({ msg: error });
+  }
 };
 
 exports.putPost = async (req, res) => {
@@ -26,7 +36,7 @@ exports.putPost = async (req, res) => {
     { _id: req.params.id },
     { $set: { title, body } }
   );
-  res.status(200).json({ post });
+  res.status(200).json(post);
 };
 
 exports.delPost = async (req, res) => {
