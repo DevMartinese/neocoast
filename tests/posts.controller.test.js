@@ -18,9 +18,9 @@ beforeEach(() => {
 
 Posts.create = jest.fn();
 Posts.find = jest.fn();
+Posts.findById = jest.fn();
 
 describe("postsController createPost", () => {
-
   beforeEach(() => {
     req.body = newPost;
   })
@@ -51,7 +51,6 @@ describe("postsController createPost", () => {
     await createPost(req, res);
     expect(res.statusCode).toBe(400);
   });
-
 });
 
 describe("postsController getPosts", () => {
@@ -59,7 +58,7 @@ describe("postsController getPosts", () => {
     expect(typeof getPosts).toBe("function");
   });
 
-  it("should call a Post.find({})", async () => {
+  it("should call a Post.find", async () => {
     await getPosts(req, res);
     expect(Posts.find).toHaveBeenCalledWith({});
   });
@@ -73,11 +72,25 @@ describe("postsController getPosts", () => {
   });
 });
 
-// describe("postsController getPost", () => {
-//   it("should have a getPost method", () => {
-//     expect(typeof getPost).toBe("function");
-//   });
-// });
+describe("postsController getPost", () => {
+  it("should have a getPost method", () => {
+    expect(typeof getPost).toBe("function");
+  });
+
+  it("should call Posts.findById", async () => {
+    req.params.id = "5d5ecb5a6e598605f06cb945";
+    await getPost(req, res);
+    expect(Posts.findById).toBeCalledWith({"_id": "5d5ecb5a6e598605f06cb945"});
+  });
+
+  it("should return response with status 200 ", async () => {
+    Posts.findById.mockReturnValue(newPost);
+    await getPost(req, res);
+    expect(res.statusCode).toBe(200);
+    expect(res._getJSONData()).toStrictEqual(newPost);
+    expect(res._isEndCalled()).toBeTruthy();
+  });
+});
 
 // describe("postsController putPost", () => {
 //   it("should have a putPost method", () => {

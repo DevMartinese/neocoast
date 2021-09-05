@@ -17,7 +17,7 @@ exports.getPosts = async (req, res) => {
 exports.getPost = async (req, res) => {
   const { id: _id } = req.params;
   const post = await Posts.findById({ _id });
-  res.status(200).json({ post });
+  res.status(200).json(post);
 };
 
 exports.putPost = async (req, res) => {
