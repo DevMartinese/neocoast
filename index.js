@@ -7,10 +7,10 @@ connectDB();
 
 app.use(express.json());
 
-const PORT = 3001;
-
 app.use("/api", require("./routes/posts"));
 
-app.listen(PORT, () => {
-  console.log(`El servidor esta funcionando en el puerto ${PORT}`);
+app.listen(3000, () => {
+  console.log(`El servidor esta funcionando en el puerto 3000`);
 });
+
+module.exports = app;

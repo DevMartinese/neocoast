@@ -1,20 +1,23 @@
 const Posts = require("../models/Posts");
 
 exports.createPost = async (req, res) => {
-  const post = new Posts(req.body);
-  await post.save();
-  res.json({ post });
+  const { title, body } = req.body;
+  if (title && body) {
+    const post = await Posts.create(req.body);
+    return res.status(201).json(post);
+  }
+  res.status(400).json("Post not created");
 };
 
 exports.getPosts = async (req, res) => {
   const posts = await Posts.find({});
-  res.json({ posts });
+  res.status(200).json(posts);
 };
 
 exports.getPost = async (req, res) => {
   const { id: _id } = req.params;
   const post = await Posts.findById({ _id });
-  res.json({ post });
+  res.status(200).json({ post });
 };
 
 exports.putPost = async (req, res) => {
@@ -23,10 +26,10 @@ exports.putPost = async (req, res) => {
     { _id: req.params.id },
     { $set: { title, body } }
   );
-  res.json({ post });
+  res.status(200).json({ post });
 };
 
 exports.delPost = async (req, res) => {
   await Posts.findOneAndRemove({ _id: req.params.id });
-  res.json({ msg: "Post Deleted" });
+  res.status(200).json({ msg: "Post Deleted" });
 };
