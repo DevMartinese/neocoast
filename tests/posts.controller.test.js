@@ -9,46 +9,42 @@ const Posts = require("../models/Posts");
 const httpMocks = require("node-mocks-http");
 const newPost = require("../mocks/posts.mock.json");
 const allPosts = require("../mocks/all-todos.mock.json");
-const { findByIdAndUpdate } = require("../models/Posts");
 let req, res;
-const postId = "6134685d7f2c70efa89addea"
+const postId = "6134685d7f2c70efa89addea";
 
 beforeEach(() => {
   req = httpMocks.createRequest();
   res = httpMocks.createResponse();
 });
 
-Posts.create = jest.fn();
-Posts.find = jest.fn();
-Posts.findById = jest.fn();
-Posts.findByIdAndUpdate = jest.fn();
+jest.mock("../models/Posts");
 
 describe("postsController createPost", () => {
   beforeEach(() => {
     req.body = newPost;
-  })
-  
+  });
+
   it("should have a createPost method", () => {
     expect(typeof createPost).toBe("function");
   });
-  
+
   it("should call a Post.create", async () => {
     await createPost(req, res);
     expect(Posts.create).toBeCalledWith(newPost);
   });
-  
+
   it("should return 201 response code", async () => {
     await createPost(req, res);
     expect(res.statusCode).toBe(201);
     expect(res._isEndCalled()).toBeTruthy();
   });
-  
+
   it("should return json body in response", async () => {
     Posts.create.mockReturnValue(newPost);
     await createPost(req, res);
     expect(res._getJSONData()).toStrictEqual(newPost);
-  })
-  
+  });
+
   it("should return 400 response code", async () => {
     req.body = {};
     await createPost(req, res);
@@ -83,7 +79,7 @@ describe("postsController getPost", () => {
   it("should call Posts.findById", async () => {
     req.params.id = postId;
     await getPost(req, res);
-    expect(Posts.findById).toBeCalledWith({"_id": postId});
+    expect(Posts.findById).toBeCalledWith({ _id: postId });
   });
 
   it("should return response with status 200 ", async () => {
@@ -99,7 +95,7 @@ describe("postsController getPost", () => {
     await getPost(req, res);
     expect(res.statusCode).toBe(404);
     expect(res._isEndCalled()).toBeTruthy();
-  })
+  });
 });
 
 describe("postsController putPost", () => {
@@ -111,7 +107,10 @@ describe("postsController putPost", () => {
     req.params.id = postId;
     req.body = newPost;
     await putPost(req, res);
-    expect(Posts.findByIdAndUpdate).toHaveBeenCalledWith({"_id": postId}, {"$set": newPost});
+    expect(Posts.findByIdAndUpdate).toHaveBeenCalledWith(
+      { _id: postId },
+      { $set: newPost }
+    );
   });
 
   it("should return http code 200 and json data", async () => {
@@ -123,10 +122,38 @@ describe("postsController putPost", () => {
     expect(res.statusCode).toBe(200);
     expect(res._getJSONData()).toStrictEqual(newPost);
   });
+
+  it("should return 404 when item doesn't exists", async () => {
+    Posts.findByIdAndUpdate.mockReturnValue(null);
+    await putPost(req, res);
+    expect(res.statusCode).toBe(404);
+    expect(res._isEndCalled()).toBeTruthy();
+  });
 });
 
-// describe("postsController delPost", () => {
-//     it("should have a delPost method", () => {
-//     expect(typeof delPost).toBe("function");
-//   });
-// });
+describe("postsController delPost", () => {
+  it("should have a delPost method", () => {
+    expect(typeof delPost).toBe("function");
+  });
+
+  it("should call findOneAndRemove", async () => {
+    req.params.id = postId;
+    await delPost(req, res);
+    expect(Posts.findOneAndRemove).toBeCalledWith({ _id: postId });
+  });
+
+  it("should return 200 http code and deleted postsmodel", async () => {
+    Posts.findOneAndRemove.mockReturnValue(newPost);
+    await delPost(req, res);
+    expect(res.statusCode).toBe(200);
+    expect(res._getJSONData()).toStrictEqual({msg: "Post Deleted"});
+    expect(res._isEndCalled()).toBeTruthy();
+  });
+
+  it('should return 404 if cant delete post', async () => {
+    Posts.findOneAndRemove.mockReturnValue(null);
+    await delPost(req, res);
+    expect(res.statusCode).toBe(404);
+    expect(res._isEndCalled()).toBeTruthy();
+  });
+});

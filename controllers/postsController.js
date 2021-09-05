@@ -24,22 +24,42 @@ exports.getPost = async (req, res) => {
     } else {
       res.status(404).send();
     }
-
+    
   } catch (error) {
     res.status(404).json({ msg: error });
   }
 };
 
 exports.putPost = async (req, res) => {
-  const { title, body } = req.body;
-  const post = await Posts.findByIdAndUpdate(
-    { _id: req.params.id },
-    { $set: { title, body } }
-  );
-  res.status(200).json(post);
+  try {
+    const { title, body } = req.body;
+    const post = await Posts.findByIdAndUpdate(
+      { _id: req.params.id },
+      { $set: { title, body } }
+    );
+
+    if (post) {
+      res.status(200).json(post);
+    } else {
+      res.status(404).send();
+    }
+
+  } catch (error) {
+    res.status(404).json({ msg: error });
+  }
 };
 
-exports.delPost = async (req, res) => {
-  await Posts.findOneAndRemove({ _id: req.params.id });
-  res.status(200).json({ msg: "Post Deleted" });
+exports.delPost = async (req, res, next) => {
+  try {
+    const deletePost = await Posts.findOneAndRemove({ _id: req.params.id });
+
+    if (deletePost) {
+      res.status(200).json({ msg: "Post Deleted" });
+    } else {
+      res.status(404).send();
+    }
+
+  } catch (error) {
+    res.status(404).json({ msg: error });
+  }
 };

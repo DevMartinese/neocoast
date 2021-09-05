@@ -42,13 +42,41 @@ describe("Test different endpoints", () => {
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(200)
-  })
+  });
 
   it("respond with code 404", async () => {
     await request(app)
       .get("/api/posts/get_post/6134685d7f2c70efa89addeasdsd")
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
-      .expect(404);
+      .expect(404)
   });
+
+  it("PUT /api/update/post/:id", async () => {
+    const testData = {title: "Hola", body: "Neocoast"};
+    await request(app)
+      .put(`/api/update/post/${postId}`)
+      .send(testData)
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(200)
+  });
+
+  it("DELETE /api/delete/post/:id", async () => {
+    await request(app)
+      .delete(`/api/delete/post/${postId}`)
+      .send()
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(200)
+  });
+
+  it("respond with code 404", async () => {
+    await request(app)
+      .delete( '/api/delete/post/6134685d7f2c70efa89addeasdsd')
+      .send()
+      .set("Accept", "application/json")
+      .expect("Content-Type", /json/)
+      .expect(404)
+  })
 })
