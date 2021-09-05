@@ -4,11 +4,11 @@ const {
   getPost,
   putPost,
   delPost,
-} = require("../controllers/postsController");
-const Posts = require("../models/Posts");
+} = require("../../controllers/postsController");
+const Posts = require("../../models/Posts");
 const httpMocks = require("node-mocks-http");
-const newPost = require("../mocks/posts.mock.json");
-const allPosts = require("../mocks/all-todos.mock.json");
+const newPost = require("../../mocks/posts.mock.json");
+const allPosts = require("../../mocks/all-todos.mock.json");
 let req, res;
 const postId = "6134685d7f2c70efa89addea";
 
@@ -17,7 +17,7 @@ beforeEach(() => {
   res = httpMocks.createResponse();
 });
 
-jest.mock("../models/Posts");
+jest.mock("../../models/Posts");
 
 describe("postsController createPost", () => {
   beforeEach(() => {
