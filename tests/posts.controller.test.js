@@ -9,8 +9,8 @@ const Posts = require("../models/Posts");
 const httpMocks = require("node-mocks-http");
 const newPost = require("../mocks/posts.mock.json");
 const allPosts = require("../mocks/all-todos.mock.json");
-
 let req, res;
+
 beforeEach(() => {
   req = httpMocks.createRequest();
   res = httpMocks.createResponse();
@@ -20,31 +20,38 @@ Posts.create = jest.fn();
 Posts.find = jest.fn();
 
 describe("postsController createPost", () => {
+
   beforeEach(() => {
     req.body = newPost;
   })
+  
   it("should have a createPost method", () => {
     expect(typeof createPost).toBe("function");
   });
+  
   it("should call a Post.create", async () => {
     await createPost(req, res);
     expect(Posts.create).toBeCalledWith(newPost);
   });
+  
   it("should return 201 response code", async () => {
     await createPost(req, res);
     expect(res.statusCode).toBe(201);
     expect(res._isEndCalled()).toBeTruthy();
   });
+  
   it("should return json body in response", async () => {
     Posts.create.mockReturnValue(newPost);
     await createPost(req, res);
     expect(res._getJSONData()).toStrictEqual(newPost);
   })
+  
   it("should return 400 response code", async () => {
     req.body = {};
     await createPost(req, res);
     expect(res.statusCode).toBe(400);
   });
+
 });
 
 describe("postsController getPosts", () => {
