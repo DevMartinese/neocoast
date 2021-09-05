@@ -1,5 +1,6 @@
 const request = require("supertest");
 const app = require("../index");
+let postId;
 
 describe("POST /api/posts/create", () => {
   it("create posts in database", async () => {
@@ -7,12 +8,13 @@ describe("POST /api/posts/create", () => {
       title: "Hola Mundo",
       body: "Como estan?",
     };
-    await request(app)
+    const response = await request(app)
       .post("/api/posts/create")
       .send(data)
       .set("Accept", "application/json")
       .expect("Content-Type", /json/)
       .expect(201);
+      postId = response.body._id;
   });
 
   it("respond with code 400 on bad request", async () => {
@@ -36,3 +38,13 @@ describe("GET /api/posts/list", () => {
       .expect(200);
   });
 });
+
+// describe("GET /api/posts/get_post/:id", () => {
+//   it("respond with a single post", async () => {
+//     await request(app)
+//       .get(`/api/posts/get_post/${post}`)
+//       .set("Accept", "application/json")
+//       .expect("Content-Type", /json/)
+//       .expect(200)
+//   })
+// })
