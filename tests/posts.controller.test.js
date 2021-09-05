@@ -69,6 +69,13 @@ describe("postsController getPosts", () => {
     expect(res._isEndCalled()).toBeTruthy();
     expect(res._getJSONData()).toStrictEqual(allPosts);
   });
+
+  it("should return response with status 404 when not found all posts", async () => {
+    Posts.find.mockReturnValue(null);
+    await getPosts(req, res);
+    expect(res.statusCode).toBe(404);
+    expect(res._isEndCalled()).toBeTruthy();
+  })
 });
 
 describe("postsController getPost", () => {
