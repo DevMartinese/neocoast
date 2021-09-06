@@ -5,39 +5,43 @@
 */
 const worldCupChampions = [
   {
-    date: "12/07/1930",
-    items: [{ country: "Uruguay", champion: "Uruguay", runnerUp: "Argentina" }],
+    date: '12/07/1930',
+    items: [{ country: 'Uruguay', champion: 'Uruguay', runnerUp: 'Argentina' }],
   },
   {
-    date: "03/09/1978",
+    date: '03/09/1978',
     items: [
-      { country: "Argentina", champion: "Argentina", runnerUp: "Holanda" },
+      { country: 'Argentina', champion: 'Argentina', runnerUp: 'Holanda' },
     ],
   },
   {
-    date: "20/04/1966",
+    date: '20/04/1966',
     items: [
-      { country: "Inglaterra", champion: "Inglaterra", runnerUp: "Alemania" },
+      { country: 'Inglaterra', champion: 'Inglaterra', runnerUp: 'Alemania' },
     ],
   },
   {
-    date: "06/12/1998",
-    items: [{ country: "Francia", champion: "Francia", runnerUp: "Brasil" }],
+    date: '06/12/1998',
+    items: [{ country: 'Francia', champion: 'Francia', runnerUp: 'Brasil' }],
   },
 ];
 
-const newOrder = worldCupChampions
-  .sort((a, b) => {
-    var aa = a.date.split("/").reverse(),
-      bb = b.date.split("/").reverse();
-    return bb < aa ? -1 : bb > aa ? 1 : 0;
-  })
-  .reduce(
-    (acc, i) => ({
-      ...acc,
-      [i.date.slice(3)]: i,
-    }),
-    {}
-  );
+const newObj = () => {
+  worldCupChampions
+    .sort((a, b) => {
+      var aa = a.date.split('/').reverse(),
+        bb = b.date.split('/').reverse();
+      return bb < aa ? -1 : bb > aa ? 1 : 0;
+    })
+    .reduce(
+      (acc, i) => ({
+        ...acc,
+        [i.date.slice(3)]: i,
+      }),
+      {}
+    );
+  
+  return worldCupChampions;
+};
 
-console.log(newOrder);
+newObj();
