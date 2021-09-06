@@ -28,7 +28,7 @@ const worldCupChampions = [
 
 /*
 Utilizamos el metodo sort que nos sirve para ordenar en este caso las fechas de manera ascendente.
-Y tambien el reduce, que nos brinda la solucion devolviendonos un obejeto con keys de las fechas de manera ascendente.
+Y tambien el reduce, que en este caso nos brinda la solucion devolviendonos un objeto con keys de las fechas de manera ascendente.
 */
 
 const newObj = () => {
