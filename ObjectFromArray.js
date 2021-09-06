@@ -26,6 +26,11 @@ const worldCupChampions = [
   },
 ];
 
+/*
+Utilizamos el metodo sort que nos sirve para ordenar en este caso las fechas de manera ascendente.
+Y tambien el reduce, que nos brinda la solucion devolviendonos un obejeto con keys de las fechas de manera ascendente.
+*/
+
 const newObj = () => {
   worldCupChampions
     .sort((a, b) => {
@@ -33,8 +38,7 @@ const newObj = () => {
         bb = b.date.split("/").reverse();
       return bb < aa ? -1 : bb > aa ? 1 : 0;
     })
-    .reduce(
-      (acc, i) => ({
+    .reduce((acc, i) => ({
         ...acc,
         [i.date.slice(3)]: i,
       }),
