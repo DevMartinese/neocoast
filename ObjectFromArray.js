@@ -27,7 +27,6 @@ const worldCupChampions = [
 ];
 
 const newOrder = worldCupChampions
-  .map((item) => item)
   .sort((a, b) => {
     var aa = a.date.split("/").reverse(),
       bb = b.date.split("/").reverse();
