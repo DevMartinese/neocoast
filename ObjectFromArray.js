@@ -32,7 +32,7 @@ Y tambien el reduce, que en este caso nos brinda la solucion devolviendonos un o
 */
 
 const newObj = () => {
-  worldCupChampions
+ return worldCupChampions
     .sort((a, b) => {
       var aa = a.date.split("/").reverse(),
         bb = b.date.split("/").reverse();
@@ -44,7 +44,6 @@ const newObj = () => {
       }),
       {}
     );
-  return worldCupChampions;
 };
 
 newObj();
